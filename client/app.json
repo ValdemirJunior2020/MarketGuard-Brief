@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "MarketGuard Brief",
+    "slug": "marketguard-brief",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "marketguardbrief",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#07111f"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.marketguard.brief",
+      "infoPlist": {
+        "NSUserNotificationsUsageDescription": "MarketGuard Brief can send optional market news summaries at your chosen time."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#07111f"
+      },
+      "package": "com.marketguard.brief"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-notifications"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "00000000-0000-0000-0000-000000000000"
+      }
+    }
+  }
+}

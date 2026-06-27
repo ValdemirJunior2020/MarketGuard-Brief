@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: marketguard-brief-server
+    env: node
+    rootDir: server
+    plan: starter
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: FIREBASE_API_KEY
+        sync: false
+      - key: FIREBASE_AUTH_DOMAIN
+        sync: false
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_STORAGE_BUCKET
+        sync: false
+      - key: FIREBASE_MESSAGING_SENDER_ID
+        sync: false
+      - key: FIREBASE_APP_ID
+        sync: false
+      - key: FIREBASE_MEASUREMENT_ID
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4.1-mini
+      - key: ADMIN_SECRET
+        generateValue: true
+      - key: EXPO_ACCESS_TOKEN
+        sync: false
+      - key: NEWS_RSS_FEEDS
+        sync: false

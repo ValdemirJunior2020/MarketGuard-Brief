@@ -1,0 +1,3 @@
+# MarketGuard Brief App Icon Prompt
+
+Create a clean iOS app icon for an app named MarketGuard Brief. The icon should show a modern shield combined with a subtle financial candlestick chart and a small news/speech signal motif, representing market protection through timely news intelligence. Use a premium fintech look, deep navy background, bright electric blue and soft green accents, minimal geometric style, no text, no numbers, no real company logos, no political faces, no flags, no copyrighted symbols. The icon must be square 1024x1024, full-bleed, opaque background, no transparency, no rounded corners because iOS will apply masking, crisp at small sizes, App Store ready.
