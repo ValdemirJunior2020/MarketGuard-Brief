@@ -52,6 +52,9 @@ function friendlyFirebaseError(code?: string) {
       return 'Too many attempts. Please try again later.';
     case 'OPERATION_NOT_ALLOWED':
       return 'Email/password sign-in is not enabled in Firebase Authentication.';
+    case 'TOKEN_EXPIRED':
+    case 'USER_NOT_FOUND':
+      return 'Your session expired. Please sign in again.';
     default:
       return code ? code.replace(/_/g, ' ') : 'Authentication failed.';
   }
@@ -67,6 +70,7 @@ async function writeStorage(key: string, value: string) {
     window.localStorage.setItem(key, value);
     return;
   }
+
   await SecureStore.setItemAsync(key, value);
 }
 
@@ -75,13 +79,18 @@ async function removeStorage(key: string) {
     window.localStorage.removeItem(key);
     return;
   }
+
   await SecureStore.deleteItemAsync(key);
 }
 
-async function callFirebaseAuth(endpoint: 'signUp' | 'signInWithPassword', payload: Record<string, unknown>) {
+function requireFirebaseApiKey() {
   if (!FIREBASE_API_KEY) {
     throw new Error('Missing EXPO_PUBLIC_FIREBASE_API_KEY in client/.env');
   }
+}
+
+async function callFirebaseAuth(endpoint: 'signUp' | 'signInWithPassword', payload: Record<string, unknown>) {
+  requireFirebaseApiKey();
 
   const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:${endpoint}?key=${FIREBASE_API_KEY}`, {
     method: 'POST',
@@ -155,6 +164,7 @@ export async function signUp(email: string, password: string) {
     password,
     returnSecureToken: true
   });
+
   const session = makeSession(response);
   await saveAuthSession(session);
   return session;
@@ -166,9 +176,37 @@ export async function signIn(email: string, password: string) {
     password,
     returnSecureToken: true
   });
+
   const session = makeSession(response);
   await saveAuthSession(session);
   return session;
+}
+
+export async function deleteAccount() {
+  requireFirebaseApiKey();
+
+  const session = await getAuthSession();
+
+  if (!session?.idToken) {
+    await signOut();
+    return;
+  }
+
+  const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:delete?key=${FIREBASE_API_KEY}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      idToken: session.idToken
+    })
+  });
+
+  const json = await response.json();
+
+  if (!response.ok) {
+    throw new Error(friendlyFirebaseError(json?.error?.message));
+  }
+
+  await signOut();
 }
 
 export async function signOut() {

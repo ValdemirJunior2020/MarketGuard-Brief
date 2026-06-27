@@ -13,10 +13,12 @@ type ScreenProps = {
 export function Screen({ children, scroll = true, refreshing, onRefresh }: ScreenProps) {
   const theme = useTheme();
 
+  const content = <View style={styles.container}>{children}</View>;
+
   if (!scroll) {
     return (
       <SafeAreaView style={[styles.safe, { backgroundColor: theme.colors.background }]}>
-        <View style={styles.content}>{children}</View>
+        {content}
       </SafeAreaView>
     );
   }
@@ -24,12 +26,12 @@ export function Screen({ children, scroll = true, refreshing, onRefresh }: Scree
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.colors.background }]}>
       <ScrollView
-        contentContainerStyle={styles.content}
+        contentContainerStyle={styles.scrollContent}
         refreshControl={
           onRefresh ? <RefreshControl refreshing={Boolean(refreshing)} onRefresh={onRefresh} /> : undefined
         }
       >
-        {children}
+        {content}
       </ScrollView>
     </SafeAreaView>
   );
@@ -39,9 +41,15 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1
   },
-  content: {
+  scrollContent: {
     flexGrow: 1,
-    padding: 18,
-    gap: 16
+    paddingHorizontal: 16,
+    paddingVertical: 20
+  },
+  container: {
+    width: '100%',
+    maxWidth: 1040,
+    alignSelf: 'center',
+    gap: 18
   }
 });

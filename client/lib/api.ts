@@ -1,7 +1,10 @@
 import { DEFAULT_TARGETS } from '../constants/followTargets';
 import { getAuthSession } from './auth';
 
-export const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000';
+export const API_BASE_URL =
+  process.env.EXPO_PUBLIC_API_BASE_URL ||
+  process.env.EXPO_PUBLIC_API_URL ||
+  'http://localhost:3000';
 
 export type RegisterDevicePayload = {
   deviceId: string;
@@ -44,6 +47,7 @@ export type NewsItem = {
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const session = await getAuthSession();
+
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -61,7 +65,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       const parsed = JSON.parse(text) as { error?: string };
       message = parsed.error || message;
     } catch {
-      // Keep original text when the backend response is not JSON.
+      // Keep raw backend response.
     }
 
     throw new Error(message);
